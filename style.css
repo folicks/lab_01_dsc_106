@@ -4,7 +4,11 @@ body {
        */
     font: 100%/1.5 system-ui;
   }
-.navbar {
+nav {
   
   display:contents;
+}
+
+time{
+  color:blue;
 }
