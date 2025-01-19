@@ -9,6 +9,8 @@ nav {
   display:contents;
 }
 
-time{
-  color:blue;
+time {
+  color: red;
+  font-weight: bold;
+  background-color: #f0f0f0;
 }
