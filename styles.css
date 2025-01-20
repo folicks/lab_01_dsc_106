@@ -12,12 +12,5 @@ nav{
   display:contents;
 }
 
-time {
-  color: red;
-  font-weight: bold;
-  background-color: #000000;
-}
+/* time is more like inline text then a literal element */
 
-/* ul{
-
-} */
