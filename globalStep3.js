@@ -47,8 +47,41 @@ document.addEventListener('DOMContentLoaded', () => {
         nav.append(a);
       }
     }
+
+    function createColorSchemeSwitcher() {
+        document.body.insertAdjacentHTML(
+          'afterbegin',
+          `
+          <label class="color-scheme">
+            Theme:
+            <select>
+              <option value="light dark">Automatic</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </label>`
+        );
+      
+        const select = document.querySelector('.color-scheme select');
+        
+        // Set initial color scheme from localStorage
+        if ('colorScheme' in localStorage) {
+          const savedScheme = localStorage.colorScheme;
+          document.documentElement.style.setProperty('color-scheme', savedScheme);
+          select.value = savedScheme;
+        }
+      
+        // Event listener for color scheme changes
+        select.addEventListener('input', function(event) {
+          const colorScheme = event.target.value;
+          document.documentElement.style.setProperty('color-scheme', colorScheme);
+          localStorage.colorScheme = colorScheme;
+        });
+    }
   
+    // createNavigation();
     createNavigation();
-  });
+    createColorSchemeSwitcher();
+});
   
   
