@@ -1,4 +1,4 @@
-console.log('IT\'S ALIVE!');
+console.log("IT'S ALIVE!");
 
 // Utility function to get an array of matching elements
 function $$(selector, context = document) {
