@@ -1,9 +1,26 @@
+const currentPath = window.location.pathname;
+
+let baseUrl = '';
+if (currentPath === '/') {
+  baseUrl = '';
+} else {
+  baseUrl = '../';
+}
+
+
 // Define pages for navigation
+// const pages = [
+//     { url: '/lab_01_dsc_106/index.html', title: 'Home' },
+//     { url: '/lab_01_dsc_106/projects/', title: 'Projects' },
+//     { url: '/lab_01_dsc_106/contact/', title: 'Contact' },
+//     { url: '/lab_01_dsc_106/resume/', title: 'Resume' }
+//   ];
+
 const pages = [
-    { url: '/lab_01_dsc_106/index.html', title: 'Home' },
-    { url: '/lab_01_dsc_106/projects/', title: 'Projects' },
-    { url: '/lab_01_dsc_106/contact/', title: 'Contact' },
-    { url: '/lab_01_dsc_106/resume/', title: 'Resume' }
+    { url: '', title: 'Home' },
+    { url: 'projects/', title: 'Projects' },
+    { url: 'contact/', title: 'Contact' },
+    { url: 'resume/', title: 'Resume' }
   ];
 
 // Check if we're on the home page
@@ -34,7 +51,8 @@ document.body.prepend(nav);
         url = '../' + url;
         }
 
-        a.href = url;
+        // a.href = url;
+        a.href = `${baseUrl}${p.url}`;
         a.textContent = p.title;
 
         // Highlight current page
