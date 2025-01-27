@@ -77,7 +77,7 @@ renderProjects Function
     // btw how to extend an interface in js
 
     @param project : which project from the html to lift
-    @param containerElement : where it's actually located on the page?
+    @param containerElement : where it's actually in the "CSS Flexbox"
     @param headingLevel : validate for 1 - 5 values h1, h2, etc.
 
 
