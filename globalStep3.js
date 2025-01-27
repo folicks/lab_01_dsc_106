@@ -2,6 +2,9 @@
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    const select = document.querySelector('.color-scheme-select');
+    const root = document.documentElement;
+
     // Determine the base path
     const currentPath = window.location.pathname;
   
@@ -44,6 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
           new URL(a.href, window.location.origin).pathname === currentPath
         );
   
+        if (a.host !== location.host) {
+            a.target = '_blank';
+        }
+
         nav.append(a);
       }
     }
@@ -78,8 +85,39 @@ document.addEventListener('DOMContentLoaded', () => {
           localStorage.colorScheme = colorScheme;
         });
     }
+
+    /*
+    // Function to set the color scheme
+    function setColorScheme(colorScheme) {
+    // Set the `color-scheme` CSS property on the root element
+        root.style.setProperty('color-scheme', colorScheme);
+
+        // If dark mode, add data-theme="dark" for additional styles
+        if (colorScheme === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+        } else {
+        root.removeAttribute('data-theme');
+        }
+    }
+
+    // Read saved preference from localStorage on page load
+    const savedColorScheme = localStorage.getItem('colorScheme');
+    if (savedColorScheme) {
+        setColorScheme(savedColorScheme);
+        select.value = savedColorScheme; // Sync the <select> element
+    }
+
+    // Add event listener for the <select> element
+    select.addEventListener('input', (event) => {
+        const selectedScheme = event.target.value;
+        setColorScheme(selectedScheme);
+        localStorage.setItem('colorScheme', selectedScheme); // Save preference
+    });
+    */
+
+
   
-    // createNavigation();
+    // setColorScheme();
     createNavigation();
     createColorSchemeSwitcher();
 });

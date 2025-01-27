@@ -68,3 +68,28 @@ const currentLink = navLinks.find(
     (a) => a.host === location.host && a.pathname === location.pathname
 );
 currentLink?.classList.add('current');
+
+
+/* 
+async function
+    handle errors for the "curl"
+renderProjects Function
+    // btw how to extend an interface in js
+
+    @param project : which project from the html to lift
+    @param containerElement : where it's actually located on the page?
+    @param headingLevel : validate for 1 - 5 values h1, h2, etc.
+
+
+
+    
+    // TODO why use the article element
+
+    // TODO how is using document.createElement not considered as appending to the HTML
+
+# TODO post 3 projects for the website
+
+
+
+
+*/
