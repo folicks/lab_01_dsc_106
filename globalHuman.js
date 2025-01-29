@@ -90,6 +90,13 @@ renderProjects Function
 # TODO post 3 projects for the website
 
 
+`export async function fetchGitHubData(username) {
+    // return statement here
+  
+    return fetchJSON("https://api.github.com/users/${folicks}")
+}
+
 
 
 */
+
