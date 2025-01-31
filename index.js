@@ -1,3 +1,5 @@
+// place the return array of html and corresponding "links" ? here 
+
 import { fetchJSON, renderProjects } from '../globalStep3.js';
 //  TODO check the wateva is the most recent file used for lab03
 
