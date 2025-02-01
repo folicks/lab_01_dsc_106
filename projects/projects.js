@@ -1,7 +1,7 @@
 import { fetchJSON, renderProjects } from '../globalStep3.js';
 
 (async function () {
-    const projects = await fetchJSON('../lib/projects.json');
+    const projects = await fetchJSON('../lib/project.json');
     const projectsContainer = document.querySelector('.projects');
 
     if (projects && projects.length > 0) {
