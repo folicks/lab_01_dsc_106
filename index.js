@@ -38,3 +38,25 @@ const profileStats = document.querySelector('#profile-stats');
         console.error("Projects container not found.");
     }
 })();
+
+import { fetchGitHubData } from './global.js';
+
+(async function () {
+    const githubData = await fetchGitHubData('your-username'); // Replace 'your-username' with your actual GitHub username
+    const profileStats = document.querySelector('#profile-stats');
+
+    if (profileStats) {
+        profileStats.innerHTML = `
+            <h2>GitHub Stats</h2>
+            <dl class="profile-grid">
+                <dt>Public Repos:</dt><dd>${githubData.public_repos}</dd>
+                <dt>Public Gists:</dt><dd>${githubData.public_gists}</dd>
+                <dt>Followers:</dt><dd>${githubData.followers}</dd>
+                <dt>Following:</dt><dd>${githubData.following}</dd>
+            </dl>
+        `;
+    } else {
+        console.error("Profile stats container not found.");
+    }
+})();
+
