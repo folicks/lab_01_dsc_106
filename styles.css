@@ -76,5 +76,29 @@ a.current {
 [data-theme="dark"] a:hover {
   color: #FFD700; /* Brighter hover color in dark mode */
 }
+
+
+/* lab o4 */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.profile-grid dt {
+  font-weight: bold;
+  grid-row: 1;
+}
+
+.profile-grid dd {
+  grid-row: 2;
+  margin: 0;
+}
+
+
+
+
 /* time is more like inline text then a literal element */
 

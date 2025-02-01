@@ -1,4 +1,6 @@
-
+// place the return array of html in the json
+//  and corresponding "links" ? here ex : ( ../lib/projects.json )
+// try in the console the url of the projects directory 
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -117,6 +119,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   
+
+    /* start of particular type of development process */
+
+    export async function fetchJSON(url) {
+      try {
+          const response = await fetch(url);
+          if (!response.ok) {
+              throw new Error(`Failed to fetch projects: ${response.statusText}`);
+          }
+          return await response.json();
+      } catch (error) {
+          console.error('Error fetching or parsing JSON data:', error);
+      }
+  }
+  
+
+
+  export function renderProjects(projects, containerElement, headingLevel = 'h2') {
+    if (!containerElement) {
+        console.error("Invalid container element");
+        return;
+    }
+
+    containerElement.innerHTML = ''; // Clear existing content
+
+    projects.forEach(project => {
+        const article = document.createElement('article');
+        article.innerHTML = `
+            <${headingLevel}>${project.title}</${headingLevel}>
+            <img src="${project.image}" alt="${project.title}">
+            <p>${project.description}</p>
+        `;
+        containerElement.appendChild(article);
+    });
+  }
+
+
+  export async function fetchGitHubData(username) {
+    return fetchJSON(`https://api.github.com/users/${username}`);
+  }
+
+
+  /* end of particular type of development process */
+
     // setColorScheme();
     createNavigation();
     createColorSchemeSwitcher();

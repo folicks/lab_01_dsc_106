@@ -1,4 +1,3 @@
-// place the return array of html and corresponding "links" ? here 
 
 import { fetchJSON, renderProjects } from '../globalStep3.js';
 //  TODO check the wateva is the most recent file used for lab03
@@ -20,3 +19,22 @@ const profileStats = document.querySelector('#profile-stats');
 
 
 // https://api.github.com/users/folicks
+
+/* beginning of particular development process */
+
+(async function () {
+    const projects = await fetchJSON('./lib/projects.json');
+    if (!projects || projects.length === 0) {
+        console.warn("No projects found in JSON file.");
+        return;
+    }
+
+    const latestProjects = projects.slice(0, 3);
+    const projectsContainer = document.querySelector('.projects');
+
+    if (projectsContainer) {
+        renderProjects(latestProjects, projectsContainer, 'h2');
+    } else {
+        console.error("Projects container not found.");
+    }
+})();
