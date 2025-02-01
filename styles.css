@@ -78,7 +78,7 @@ a.current {
 }
 
 
-/* lab o4 */
+/* lab 04 */
 .profile-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
