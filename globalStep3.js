@@ -1,7 +1,7 @@
 // place the return array of html in the json
 //  and corresponding "links" ? here ex : ( ../lib/projects.json )
 // try in the console the url of the projects directory 
-
+export {fetchGitHubData,renderProjects,fetchJSON};
 
 document.addEventListener('DOMContentLoaded', () => {
     const select = document.querySelector('.color-scheme-select');
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* start of particular type of development process */
 
-    export async function fetchJSON(url) {
+    async function fetchJSON(url) {
       try {
           const response = await fetch(url);
           if (!response.ok) {
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
 
 
-  export function renderProjects(projects, containerElement, headingLevel = 'h2') {
+  function renderProjects(projects, containerElement, headingLevel = 'h2') {
     if (!containerElement) {
         console.error("Invalid container element");
         return;
@@ -156,10 +156,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  export async function fetchGitHubData(username) {
+  async function fetchGitHubData(username) {
     return fetchJSON(`https://api.github.com/users/${username}`);
   }
 
+
+  
 
   /* end of particular type of development process */
 
