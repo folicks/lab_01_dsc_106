@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* start of particular type of development process */
 
-    async function fetchJSON(url) {
+  async function fetchJSON(url) {
       try {
           const response = await fetch(url);
           if (!response.ok) {
@@ -136,24 +136,24 @@ document.addEventListener('DOMContentLoaded', () => {
   
 
 
-  function renderProjects(projects, containerElement, headingLevel = 'h2') {
-    if (!containerElement) {
-        console.error("Invalid container element");
-        return;
-    }
+  // function renderProjects(projects, containerElement, headingLevel = 'h2') {
+  //   if (!containerElement) {
+  //       console.error("Invalid container element");
+  //       return;
+  //   }
 
-    containerElement.innerHTML = ''; // Clear existing content
+  //   containerElement.innerHTML = ''; // Clear existing content
 
-    projects.forEach(project => {
-        const article = document.createElement('article');
-        article.innerHTML = `
-            <${headingLevel}>${project.title}</${headingLevel}>
-            <img src="${project.image}" alt="${project.title}">
-            <p>${project.description}</p>
-        `;
-        containerElement.appendChild(article);
-    });
-  }
+  //   projects.forEach(project => {
+  //       const article = document.createElement('article');
+  //       article.innerHTML = `
+  //           <${headingLevel}>${project.title}</${headingLevel}>
+  //           <img src="${project.image}" alt="${project.title}">
+  //           <p>${project.description}</p>
+  //       `;
+  //       containerElement.appendChild(article);
+  //   });
+  // }
 
 
   async function fetchGitHubData(username) {

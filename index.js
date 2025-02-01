@@ -39,10 +39,10 @@ const profileStats = document.querySelector('#profile-stats');
     }
 })();
 
-import { fetchGitHubData } from './global.js';
+import { fetchGitHubData } from './globalStep3.js';
 
 (async function () {
-    const githubData = await fetchGitHubData('your-username'); // Replace 'your-username' with your actual GitHub username
+    const githubData = await fetchGitHubData('folicks'); 
     const profileStats = document.querySelector('#profile-stats');
 
     if (profileStats) {
