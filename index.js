@@ -4,7 +4,7 @@ import { fetchJSON, renderProjects } from './globalStep3.js';
 
 
 
-const projects = await fetchJSON('../lib/project.json');
+const projects = await fetchJSON('https://folicks.github.io/lab_01_dsc_106/lib/project.json');
 const latestProjects = projects.slice(0, 3);
 // TODO make your projects into JSON (direct import of ipynb?)
 
