@@ -23,7 +23,7 @@ const profileStats = document.querySelector('#profile-stats');
 /* beginning of particular development process */
 
 (async function () {
-    const projects = await fetchJSON('./lib/projects.json');
+    const projects = await fetchJSON('/lib/project.json');
     if (!projects || projects.length === 0) {
         console.warn("No projects found in JSON file.");
         return;
@@ -43,6 +43,7 @@ import { fetchGitHubData } from './globalStep3.js';
 
 (async function () {
     const githubData = await fetchGitHubData('folicks'); 
+    console.log(githubData)
     const profileStats = document.querySelector('#profile-stats');
 
     if (profileStats) {
