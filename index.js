@@ -2,7 +2,7 @@
 import { fetchJSON, renderProjects } from './globalStep3.js';
 //  TODO check the wateva is the most recent file used for lab03
 
-const projects = await fetchJSON('./lib/projects.json');
+const projects = await fetchJSON('./lib/project.json');
 const latestProjects = projects.slice(0, 3);
 // TODO make your projects into JSON (direct import of ipynb?)
 
@@ -23,7 +23,7 @@ const profileStats = document.querySelector('#profile-stats');
 /* beginning of particular development process */
 
 (async function () {
-    const projects = await fetchJSON('/lib/project.json');
+    const projects = await fetchJSON(baseUrl + './lib/project.json');
     if (!projects || projects.length === 0) {
         console.warn("No projects found in JSON file.");
         return;
