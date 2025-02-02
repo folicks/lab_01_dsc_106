@@ -43,7 +43,7 @@ import { fetchGitHubData } from './globalStep3.js';
 
 (async function () {
     const githubData = await fetchGitHubData('folicks'); 
-    console.log(githubData)
+    // console.log(githubData)
     const profileStats = document.querySelector('#profile-stats');
 
     if (profileStats) {
@@ -59,5 +59,8 @@ import { fetchGitHubData } from './globalStep3.js';
     } else {
         console.error("Profile stats container not found.");
     }
+
+
+    
 })();
 
