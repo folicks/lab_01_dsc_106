@@ -156,11 +156,20 @@ function renderProjects(projects, containerElement, headingLevel = 'h2') {
 
   projects.forEach(project => {
       const article = document.createElement('article');
+      const projectElement = document.createElement('div');
+      projectElement.classList.add('project');
+
+      const yearElement = document.createElement('div');
+      yearElement.classList.add('project-year');
+      yearElement.textContent = `Year: ${project.year}`;
+
       article.innerHTML = `
           <${headingLevel}>${project.title}</${headingLevel}>
           <img src="${project.image}" alt="${project.title}">
           <p>${project.description}</p>
       `;
+
+      article.appendChild(yearElement);
       containerElement.appendChild(article);
   });
 }
