@@ -2,6 +2,8 @@
 import { fetchJSON, renderProjects } from './globalStep3.js';
 //  TODO check the wateva is the most recent file used for lab03
 
+
+
 const projects = await fetchJSON('./lib/project.json');
 const latestProjects = projects.slice(0, 3);
 // TODO make your projects into JSON (direct import of ipynb?)
