@@ -105,6 +105,14 @@ a.current {
   margin-top: 5px;
 }
 
+svg {
+  max-width: 20em;
+  margin-block: 2em;
+
+  /* Do not clip shapes outside the viewBox */
+  overflow: visible;
+}
+
 
 
 /* time is more like inline text then a literal element */
