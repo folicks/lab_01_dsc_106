@@ -52,19 +52,36 @@ for (let d of data) {
 
 let arcs = arcData.map((d) => arcGenerator(d));
 
-// arcs.forEach(arc => {
-//     g.append("path")
-//       .attr('d', arc)
-//       .attr('fill',"blue");
+//suggested solution 
 
-// })
+let svg = d3.select('svg');
+let g = svg.append('g')
+    .attr('transform', 'translate(0, 0)');
+
+arcs.forEach(arc => {
+    g.append("g")
+      .attr('d', arc)
+      .attr('fill',"blue");
+
+})
 
 
-// let colors = ['gold', 'purple'];
+let colors = ['gold', 'purple'];
 
-// arcs.forEach((arc, idx) => {
-//     d3.select('svg g')
-//       .append('path')
-//       .attr('d', arc)
-//       .attr('fill', colors[idx]);
-// });
+arcs.forEach((arc, idx) => {
+    d3.select('svg g')
+      .append('path')
+      .attr('d', arc)
+      .attr('fill', colors[idx]);
+});
+
+
+// suppose it alternative to the code above
+/* 
+
+
+let data = [1, 2];
+let sliceGenerator = d3.pie();
+let arcData = sliceGenerator(data);
+let arcs = arcData.map((d) => arcGenerator(d));
+*/
