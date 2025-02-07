@@ -117,11 +117,7 @@ svg {
 
 /* time is more like inline text then a literal element */
 
-.legend-container {
-  padding: 20px;
-  border: 1px solid #ccc;
-  margin-top: 20px;
-}
+
 
 .legend {
   display: grid;
@@ -147,4 +143,22 @@ svg {
   aspect-ratio: 1/1;
   border-radius: 50%;
   background-color: var(--color);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.chart-container {
+  flex: 0 0 200px;
+}
+
+.legend-container {
+  flex: 1;
+  min-width: 300px;
 }
