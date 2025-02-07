@@ -77,3 +77,19 @@ let rolledData = d3.rollups(
 
 console.log(rolledData)
 
+
+// let query = '';
+
+// let searchInput = document.querySelector('.searchBar');
+
+// searchInput.addEventListener('change', (event) => {
+//   // update query value
+//   query = event.target.value;
+//   // TODO: filter the projects
+
+//   // TODO: render updated projects!
+
+// });
+
+
+// let filteredProjects = projects.filter((project) => project.title.includes(query));
