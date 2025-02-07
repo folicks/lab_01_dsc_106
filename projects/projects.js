@@ -60,6 +60,20 @@ data.forEach((d, idx) => {
 
 
 
+let projects = await fetchJSON('../lib/project.json');
+
+// let projects = d3.select("article.projects");
+// console.log(projects.length);
+// let projectData = projects.nodes();
 
 
+
+let rolledData = d3.rollups(
+    projects,
+    (v) => v.length,
+    (d) => d.year,
+);
+
+
+console.log(rolledData)
 
