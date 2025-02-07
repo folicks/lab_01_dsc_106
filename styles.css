@@ -117,3 +117,34 @@ svg {
 
 /* time is more like inline text then a literal element */
 
+.legend-container {
+  padding: 20px;
+  border: 1px solid #ccc;
+  margin-top: 20px;
+}
+
+.legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+  gap: 15px;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.swatch {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background-color: var(--color);
+}
