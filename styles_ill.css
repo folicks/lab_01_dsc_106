@@ -1,0 +1,195 @@
+/* Base styles and layout */
+body {
+    font: 100%/1.5 system-ui;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  /* Navigation styling */
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color, oklch(50% 10% 200 / 40%));
+  }
+  
+  /* Color scheme switcher */
+  label.color-scheme {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    z-index: 100;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Link styling */
+  a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 1rem;
+    transition: color 0.2s ease;
+  }
+  
+  a:hover {
+    color: #007BFF;
+  }
+  
+  a.current {
+    font-weight: 600;
+    color: #0056b3;
+    text-decoration: underline;
+  }
+  
+  /* Dark theme */
+  [data-theme="dark"] {
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  [data-theme="dark"] label.color-scheme {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+  }
+  
+  [data-theme="dark"] a.current {
+    color: #ffa500;
+  }
+  
+  [data-theme="dark"] a:hover {
+    color: #FFD700;
+  }
+  
+  /* Profile grid */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+  
+  .profile-grid dt {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .profile-grid dd {
+    margin: 0;
+  }
+  
+  /* Project styling */
+  .project-year {
+    font-family: Baskerville, "Libre Baskerville", serif;
+    font-variant-numeric: oldstyle-nums;
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+  
+  /* SVG and visualization */
+  svg {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin: 2rem auto;
+    display: block;
+    overflow: visible;
+  }
+  
+  /* Legend styling */
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--bg-color, white);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+    max-width: 600px;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .legend-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+  }
+  
+  .swatch {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    background-color: var(--color);
+    flex-shrink: 0;
+  }
+  
+  /* Container layout */
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  
+  @media (min-width: 768px) {
+    .container {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+    
+    .chart-container {
+      flex: 0 0 400px;
+    }
+    
+    .legend-container {
+      flex: 1;
+    }
+  }
+  
+  /* Recipe length handling */
+  article {
+    max-width: 65ch;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  
+  .recipe {
+    --recipe-max-length: var(--content-width, 65ch);
+    max-width: var(--recipe-max-length);
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: var(--bg-color, white);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
