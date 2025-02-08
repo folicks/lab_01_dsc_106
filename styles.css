@@ -165,3 +165,39 @@ svg {
   flex: 1;
   min-width: 300px;
 } 
+
+
+/* Pie chart interaction styles */
+svg {
+  /* Handle hover states for pie segments */
+  &:has(path:hover) {
+    path:not(:hover) {
+      opacity: 0.5;
+    }
+  }
+}
+
+/* Transition for smooth animations */
+path {
+  transition: 300ms;
+  cursor: pointer;
+}
+
+/* Selected state styling */
+.selected {
+  --color: oklch(60% 45% 0) !important;
+}
+
+.selected:is(path) {
+  fill: var(--color);
+}
+
+/* Legend styling */
+.legend li {
+  cursor: pointer;
+  transition: 300ms;
+}
+
+.legend .selected {
+  font-weight: bold;
+}
