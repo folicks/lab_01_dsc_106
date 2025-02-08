@@ -1,3 +1,6 @@
+
+
+
 body {
     /* Set line height to 1.5 times the font size
          and use the OS’s UI font as the website font
@@ -161,4 +164,13 @@ svg {
 .legend-container {
   flex: 1;
   min-width: 300px;
+} 
+.tooltip {
+  position: absolute;
+  left: -50px !important; /* Adjust this value as needed */
+  transform: translateX(-50%);
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

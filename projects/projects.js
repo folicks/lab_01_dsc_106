@@ -247,8 +247,8 @@ const projectsContainer = document.querySelector('.projects');
 const searchInput = document.querySelector('.searchBar');
 
 // Initialize visualization dimensions
-const width = 200;
-const height = 200;
+const width = 150;
+const height = 150;
 const radius = Math.min(width, height) / 2;
 
 // Set up the SVG
@@ -256,9 +256,15 @@ const svg = d3.select('svg')
     .attr('width', width)
     .attr('height', height);
 
-const g = svg.append('g')
+/* const g = svg.append('g')
     .attr('transform', `translate(${width / 2}, ${height / 2})`);
 
+
+ */
+
+
+const g = svg.append('g')
+    .attr('transform', `translate(${width / 2 - 100}, ${height / 2 - 100})`);
 // Arc generator
 const arcGenerator = d3.arc()
     .innerRadius(0)
