@@ -190,6 +190,8 @@ path {
 
 .selected:is(path) {
   fill: var(--color);
+
+  
 }
 
 /* Legend styling */

@@ -1,11 +1,3 @@
-
-
-
-
-
-/* 
-
-
 import { fetchJSON, renderProjects } from '../globalStep3.js';
 import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
 
@@ -66,7 +58,7 @@ function renderPieChart(projectsToShow) {
         .enter()
         .append('path')
         .attr('d', arcGenerator)
-        .attr('fill', (d, i) => colors(i))
+        .attr('fill', (d, i) => i === selectedIndex ? 'magenta' : colors(i))
         .attr('stroke', 'white')
         .attr('stroke-width', 2)
         .attr('cursor', 'pointer') // Indicate clickable
@@ -78,10 +70,10 @@ function renderPieChart(projectsToShow) {
     const legend = d3.select('.legend');
     pieData.forEach((d, idx) => {
         legend.append('li')
-            .attr('style', `--color:${colors(idx)}`)
+            .attr('style', `--color:${idx === selectedIndex ? 'magenta' : colors(idx)}`)
             .attr('class', idx === selectedIndex ? 'selected' : '')
             .attr('cursor', 'pointer')
-            .html(`<span class="swatch"></span> ${d.label} <em>(${d.value})</em>`)
+            .html(`<span class="swatch" style="background-color: ${idx === selectedIndex ? 'magenta' : colors(idx)}"></span> ${d.label} <em>(${d.value})</em>`)
             .on('click', () => handleSegmentClick(d, idx));
     });
 }
@@ -110,6 +102,7 @@ function updateSelectionState() {
     // Update pie segments
     g.selectAll('path')
         .attr('class', (d, i) => i === selectedIndex ? 'selected' : '')
+        .attr('fill', (d, i) => i === selectedIndex ? 'magenta' : colors(i))
         .style('opacity', (d, i) => 
             selectedIndex === -1 || i === selectedIndex ? 1 : 0.5
         );
@@ -118,6 +111,7 @@ function updateSelectionState() {
     d3.select('.legend')
         .selectAll('li')
         .attr('class', (d, i) => i === selectedIndex ? 'selected' : '')
+        .attr('style', (d, i) => `--color:${i === selectedIndex ? 'magenta' : colors(i)}`)
         .style('opacity', (d, i) => 
             selectedIndex === -1 || i === selectedIndex ? 1 : 0.5
         );
@@ -156,8 +150,16 @@ async function init() {
                 
                 // Reset selection when searching
                 selectedIndex = -1;
-                filterAndUpdateProjects(filteredProjects);
-                renderPieChart(filteredProjects);
+                if (filteredProjects.length === 0) {
+                    // If no matches found, show all projects and default pie chart
+                    projectsContainer.innerHTML = '<p>No matching projects found.</p>';
+                    filterAndUpdateProjects(allProjects);
+                    renderPieChart(allProjects);
+                } else {
+                    // Show filtered projects and update pie chart
+                    filterAndUpdateProjects(filteredProjects);
+                    renderPieChart(filteredProjects);
+                }
             });
         } else {
             projectsContainer.innerHTML = '<p>No projects found.</p>';
@@ -173,98 +175,6 @@ init();
 
 
 
- */
-
-
-/* use the code below with the most functionality */
-
-/* 
-// Import necessary modules
-import { fetchJSON, renderProjects } from '../globalStep3.js';
-import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
-
-// Global state
-let allProjects = [];
-let selectedIndex = -1;
-const projectsContainer = document.querySelector('.projects');
-const searchInput = document.querySelector('.searchBar');
-
-// Visualization dimensions
-const width = 150, height = 150, radius = Math.min(width, height) / 2;
-const svg = d3.select('svg').attr('width', width).attr('height', height);
-const g = svg.append('g').attr('transform', `translate(${width / 2 -100}, ${height / 2-100})`);
-const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius - 10);
-const colors = d3.scaleOrdinal(d3.schemeTableau10);
-
-function renderPieChart(projectsToShow) {
-    if (!projectsToShow.length) {
-        renderPieChart(allProjects); // Revert to original if empty
-        return;
-    }
-
-    const pieData = d3.rollups(projectsToShow, v => v.length, d => d.year)
-        .map(([year, count]) => ({ value: count, label: year }));
-
-    const pie = d3.pie().value(d => d.value).sort(null);
-    const arcData = pie(pieData);
-
-    g.selectAll('path').remove();
-    d3.select('.legend').selectAll('li').remove();
-
-    g.selectAll('path')
-        .data(arcData)
-        .enter().append('path')
-        .attr('d', arcGenerator)
-        .attr('fill', (d, i) => colors(i))
-        .attr('stroke', 'white')
-        .attr('stroke-width', 2)
-        .on('click', (event, d) => handleSegmentClick(d));
-
-    const legend = d3.select('.legend');
-    pieData.forEach((d, i) => {
-        legend.append('li')
-            .style('color', colors(i))
-            .html(`<span class='swatch'></span> ${d.label} <em>(${d.value})</em>`)
-            .on('click', () => handleSegmentClick(d));
-    });
-}
-
-function handleSegmentClick(d) {
-    const filteredProjects = allProjects.filter(project => project.year === d.data.label);
-    selectedIndex = filteredProjects.length ? d.index : -1;
-    filterAndUpdateProjects(filteredProjects.length ? filteredProjects : allProjects);
-}
-
-function filterAndUpdateProjects(projectsToShow) {
-    renderProjects(projectsToShow, projectsContainer, 'h2');
-    updateProjectCount(projectsToShow.length);
-    renderPieChart(projectsToShow);
-}
-
-function updateProjectCount(count) {
-    document.querySelector('.projects-title').textContent = `Projects (${count})`;
-}
-
-async function init() {
-    try {
-        allProjects = await fetchJSON('../lib/project.json');
-        if (allProjects.length) {
-            filterAndUpdateProjects(allProjects);
-            searchInput.addEventListener('input', event => {
-                const query = event.target.value.toLowerCase();
-                const filteredProjects = allProjects.filter(project =>
-                    Object.values(project).join('\n').toLowerCase().includes(query));
-                filterAndUpdateProjects(filteredProjects);
-            });
-        } else {
-            projectsContainer.innerHTML = '<p>No projects found.</p>';
-        }
-    } catch (error) {
-        console.error('Error loading projects:', error);
-    }
-}
-
-init();
 
 
 
@@ -272,115 +182,3 @@ init();
 
 
 
- */
-
-// Import necessary modules
-import { fetchJSON, renderProjects } from '../globalStep3.js';
-import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
-
-// Global state
-let allProjects = [];
-let selectedYear = null;
-const projectsContainer = document.querySelector('.projects');
-const searchInput = document.querySelector('.searchBar');
-
-// Visualization dimensions
-const width = 150, height = 150, radius = Math.min(width, height) / 2;
-const svg = d3.select('svg').attr('width', width).attr('height', height);
-const g = svg.append('g').attr('transform', `translate(${width / 2-100}, ${height / 2-100})`);
-const arcGenerator = d3.arc().innerRadius(0).outerRadius(radius - 10);
-const colors = d3.scaleOrdinal(d3.schemeTableau10);
-
-function renderPieChart(projectsToShow) {
-    if (!projectsToShow.length) {
-        renderPieChart(allProjects);
-        return;
-    }
-
-    // Calculate data for pie chart
-    const pieData = d3.rollups(projectsToShow, v => v.length, d => d.year)
-        .map(([year, count]) => ({ value: count, label: year }));
-
-    const pie = d3.pie().value(d => d.value).sort(null);
-    const arcData = pie(pieData);
-
-    // Remove existing paths and legend items
-    g.selectAll('path').remove();
-    d3.select('.legend').selectAll('li').remove();
-
-    // Create pie segments
-    const paths = g.selectAll('path')
-        .data(arcData)
-        .enter().append('path')
-        .attr('d', arcGenerator)
-        .attr('fill', (d, i) => colors(i))
-        .attr('stroke', 'white')
-        .attr('stroke-width', 2)
-        .attr('class', d => d.data.label === selectedYear ? 'selected' : '')
-        .on('click', (event, d) => handleSegmentClick(d));
-
-    // Create legend
-    const legend = d3.select('.legend');
-    pieData.forEach((d, i) => {
-        legend.append('li')
-            .attr('class', d.label === selectedYear ? 'selected' : '')
-            .style('color', colors(i))
-            .html(`<span class='swatch' style="background-color: ${colors(i)}"></span> ${d.label} <em>(${d.value})</em>`)
-            .on('click', () => handleSegmentClick({ data: d }));
-    });
-}
-
-function handleSegmentClick(d) {
-    // Toggle selection
-    if (selectedYear === d.data.label) {
-        selectedYear = null;
-        filterAndUpdateProjects(allProjects);
-    } else {
-        selectedYear = d.data.label;
-        const filteredProjects = allProjects.filter(project => project.year === selectedYear);
-        filterAndUpdateProjects(allProjects, filteredProjects);
-    }
-}
-
-function filterAndUpdateProjects(allProjects, filteredProjects = allProjects) {
-    // Update projects display
-    renderProjects(filteredProjects, projectsContainer, 'h2');
-    updateProjectCount(filteredProjects.length);
-    
-    // Re-render pie chart while maintaining all segments
-    renderPieChart(allProjects);
-    
-    // Update styles for selected segment
-    g.selectAll('path')
-        .classed('selected', d => d.data.label === selectedYear);
-    
-    d3.select('.legend').selectAll('li')
-        .classed('selected', d => d.label === selectedYear);
-}
-
-function updateProjectCount(count) {
-    document.querySelector('.projects-title').textContent = `Projects (${count})`;
-}
-
-async function init() {
-    try {
-        allProjects = await fetchJSON('../lib/project.json');
-        if (allProjects.length) {
-            filterAndUpdateProjects(allProjects);
-            
-            // Set up search functionality
-            searchInput.addEventListener('input', event => {
-                const query = event.target.value.toLowerCase();
-                const filteredProjects = allProjects.filter(project =>
-                    Object.values(project).join('\n').toLowerCase().includes(query));
-                filterAndUpdateProjects(allProjects, filteredProjects);
-            });
-        } else {
-            projectsContainer.innerHTML = '<p>No projects found.</p>';
-        }
-    } catch (error) {
-        console.error('Error loading projects:', error);
-    }
-}
-
-init();
