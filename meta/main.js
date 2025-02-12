@@ -42,6 +42,20 @@ function processCommits() {
     });
 }
 
+
+function getTimeOfDay(date) {
+  const hour = date.getHours();
+  if (hour >= 5 && hour < 12) {
+    return 'Morning';
+  } else if (hour >= 12 && hour < 17) {
+    return 'Afternoon';
+  } else if (hour >= 17 && hour < 21) {
+    return 'Evening';
+  } else {
+    return 'Night';
+  }
+}
+
 function displayStats() {
   // Process commits first
   processCommits();
@@ -57,7 +71,27 @@ function displayStats() {
   dl.append('dt').text('Total commits');
   dl.append('dd').text(commits.length);
 
-  // Add more stats as needed...
+  const maxDepth = d3.max(data, (d) => d.depth);
+  dl.append('dt').text('Max Depth');
+  dl.append('dd').text(maxDepth);
+
+
+
+  const timeOfDayCounts = d3.rollup(
+    data,
+    (v) => v.length,
+    (d) => getTimeOfDay(d.datetime)
+  );
+
+  const mostFrequentTimeOfDay = d3.max(Array.from(timeOfDayCounts), (d) => d[1]);
+  const timeOfDay = Array.from(timeOfDayCounts).find(
+    (d) => d[1] === mostFrequentTimeOfDay
+  );
+
+  dl.append('dt').text('Most Frequent Time of Day');
+  dl.append('dd').text(`${timeOfDay[0]} (${timeOfDay[1]} lines)`);
+
+
 }
 
 

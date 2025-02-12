@@ -1,8 +1,8 @@
 # lab_01_dsc_106
 
 - [ ] update my versions of npm or node (perhaps?)
-- [ ] how to check whether or the .yaml is running
+- [x] how to check whether or the .yaml is running
 - [ ] i shouldve checked whether the csv changed
-- [ ] had to change from deploy from to branch to workflows wateva that means
+- [x] how to use the deploy.yaml if its deployed from branch
 
  
