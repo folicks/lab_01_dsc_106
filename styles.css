@@ -203,3 +203,25 @@ path {
 .legend .selected {
   font-weight: bold;
 }
+
+
+#stats dl.stats {
+  /* Style the dl element with class 'stats' inside the #stats element */
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+#stats dt {
+  /* Style the dt elements inside the #stats element */
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+#stats dd {
+  /* Style the dd elements inside the #stats element */
+  margin-left: 0; /* Remove default margin */
+  margin-bottom: 10px;
+}

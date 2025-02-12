@@ -14,7 +14,8 @@ async function loadData() {
     date: new Date(row.date + 'T00:00' + row.timezone),
     datetime: new Date(row.datetime),
   }));
-  console.log(data);
+  displayStats();
+  // console.log(data);
   // this works btw and actually reads
 }
 
@@ -41,14 +42,28 @@ function processCommits() {
     });
 }
 
+function displayStats() {
+  // Process commits first
+  processCommits();
+
+  // Create the dl element
+  const dl = d3.select('#stats').append('dl').attr('class', 'stats');
+
+  // Add total LOC
+  dl.append('dt').html('Total <abbr title="Lines of code">LOC</abbr>');
+  dl.append('dd').text(data.length);
+
+  // Add total commits
+  dl.append('dt').text('Total commits');
+  dl.append('dd').text(commits.length);
+
+  // Add more stats as needed...
+}
+
 
 document.addEventListener('DOMContentLoaded', async () => {
   await loadData();
   processCommits();
   console.log(commits);
 });
-
-// commits = d3.groups(data, (d) => d.commit);
-// console.log(commits);
-// // this doesn't work, it returns an empty array
 
