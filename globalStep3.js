@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
       { url: `${baseUrl}projects/index.html`, title: 'Projects' },
       { url: `${baseUrl}contact/index.html`, title: 'Contact' },
       { url: `${baseUrl}resume/index.html`, title: 'Resume' },
+      { url: `${baseUrl}meta/index.html`, title: 'Meta' }
     ];
   
     // Check if we are on the home page
