@@ -2,6 +2,8 @@ import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
 
 let data = [];
 let commits = [];
+let xScale, yScale;
+
 
 async function loadData() {
   data = await d3.csv('./loc.csv', (row) => ({
@@ -20,8 +22,7 @@ function processCommits() {
     .groups(data, (d) => d.commit)
     .map(([commit, lines]) => {
       let first = lines[0];
-
-      let { author, date, time, timezone, datetime, line } = first;
+      let { author, date, time, timezone, datetime } = first;
       let hourFrac = datetime.getHours() + datetime.getMinutes() / 60 + datetime.getSeconds() / 3600;
 
       return {
@@ -32,7 +33,12 @@ function processCommits() {
         timezone,
         datetime,
         hourFrac,
-        totalLines: lines.reduce((sum, d) => sum + d.line, 0), // Sum of lines edited in each commit
+        totalLines: lines.reduce((sum, d) => sum + d.line, 0),
+        // Store the lines array with each commit so we can access language info later
+        lines: lines.map(line => ({
+          type: line.type,  // The language type
+          line: line.line   // Number of lines changed
+        }))
       };
     });
 }
@@ -128,13 +134,8 @@ function createScatterPlot() {
     .attr('viewBox', `0 0 ${width} ${height}`)
     .style('overflow', 'visible');
 
-  const xScale = d3
-    .scaleTime()
-    .domain(d3.extent(commits, (d) => d.datetime))
-    .range([0, width])
-    .nice();
-
-  const yScale = d3.scaleLinear().domain([0, 24]).range([height, 0]);
+  xScale = d3.scaleTime().domain(d3.extent(commits, (d) => d.datetime)).range([0, width]).nice();
+  yScale = d3.scaleLinear().domain([0, 24]).range([height, 0]);
 
   // Calculate the range of edited lines across all commits
   const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
@@ -213,10 +214,94 @@ function createScatterPlot() {
     .call(yAxis);
 }
 
+let brushSelection = null;
+function brushed(event) {
+  // The selection is an array like [[x0, y0], [x1, y1]] 
+  // or null if the user clears the brush
+  brushSelection = event.selection;
+
+  // Update visuals
+  updateSelection();
+  updateSelectionCount();
+  updateLanguageBreakdown();
+}
+
+function brushSelector() {
+  const svg = document.querySelector('svg');
+
+  // Attach brush with event handlers
+  const brush = d3.brush().on('start brush end', brushed);
+
+  // Call the brush
+  d3.select(svg).call(brush);
+
+  // Raise the dots so that they remain clickable
+  d3.select(svg).selectAll('.dots, .overlay ~ *').raise();
+}
+function isCommitSelected(commit) {
+  if (!brushSelection) return false; // If no selection, nothing is selected
+
+  const [[x0, y0], [x1, y1]] = brushSelection;
+
+  const x = xScale(commit.datetime);
+  const y = yScale(commit.hourFrac);
+
+  // Check if the commit's x/y is within the brushed box
+  return x >= x0 && x <= x1 && y >= y0 && y <= y1;
+}
+
+function updateSelection() {
+  d3.selectAll('circle')
+    .classed('selected', (d) => isCommitSelected(d));
+}
+
+function updateSelectionCount() {
+  const selectedCommits = brushSelection
+    ? commits.filter(isCommitSelected)
+    : [];
+  const countElement = document.getElementById('selection-count');
+  countElement.textContent = `${
+    selectedCommits.length || 'No'
+  } commits selected`;
+}
+
+function updateLanguageBreakdown() {
+  const selectedCommits = brushSelection
+    ? commits.filter(isCommitSelected)
+    : [];
+  const container = document.getElementById('language-breakdown');
+
+  // If no commits are selected, clear the breakdown
+  if (selectedCommits.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  // Flatten out all lines from all selected commits
+  const lines = selectedCommits.flatMap((d) => d.lines);
+
+  // Roll up by language
+  const breakdown = d3.rollup(lines, (v) => v.length, (d) => d.type);
+
+  container.innerHTML = '';
+  for (const [language, count] of breakdown) {
+    const proportion = count / lines.length;
+    const formatted = d3.format('.1~%')(proportion);
+    container.innerHTML += `
+      <dt>${language}</dt>
+      <dd>${count} lines (${formatted})</dd>
+    `;
+  }
+}
+
+
+
+
 document.addEventListener('DOMContentLoaded', async () => {
   await loadData();
   processCommits();
   createScatterPlot();
+  brushSelector();
   console.log(commits);
 });
 

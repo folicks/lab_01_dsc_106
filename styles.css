@@ -276,3 +276,6 @@ circle {
 circle:hover {
   transform: scale(1.5);
 }
+circle.selected {
+  fill: #ff6b6b;
+}
