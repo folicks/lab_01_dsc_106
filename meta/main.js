@@ -1,7 +1,5 @@
 import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
 
-
-
 let data = [];
 let commits = [];
 
@@ -15,11 +13,7 @@ async function loadData() {
     datetime: new Date(row.datetime),
   }));
   displayStats();
-  // console.log(data);
-  // this works btw and actually reads
 }
-
-
 
 function processCommits() {
   commits = d3
@@ -27,10 +21,8 @@ function processCommits() {
     .map(([commit, lines]) => {
       let first = lines[0];
 
-      // We can use object destructuring to get these properties
-      let { author, date, time, timezone, datetime } = first;
+      let { author, date, time, timezone, datetime, line } = first;
       let hourFrac = datetime.getHours() + datetime.getMinutes() / 60 + datetime.getSeconds() / 3600;
-
 
       return {
         id: commit,
@@ -39,12 +31,11 @@ function processCommits() {
         time,
         timezone,
         datetime,
-        hourFrac
-        // What other properties might be useful?
+        hourFrac,
+        totalLines: lines.reduce((sum, d) => sum + d.line, 0), // Sum of lines edited in each commit
       };
     });
 }
-
 
 function getTimeOfDay(date) {
   const hour = date.getHours();
@@ -60,25 +51,19 @@ function getTimeOfDay(date) {
 }
 
 function displayStats() {
-  // Process commits first
   processCommits();
 
-  // Create the dl element
   const dl = d3.select('#stats').append('dl').attr('class', 'stats');
 
-  // Add total LOC
   dl.append('dt').html('Total <abbr title="Lines of code">LOC</abbr>');
   dl.append('dd').text(data.length);
 
-  // Add total commits
   dl.append('dt').text('Total commits');
   dl.append('dd').text(commits.length);
 
   const maxDepth = d3.max(data, (d) => d.depth);
   dl.append('dt').text('Max Depth');
   dl.append('dd').text(maxDepth);
-
-
 
   const timeOfDayCounts = d3.rollup(
     data,
@@ -93,8 +78,6 @@ function displayStats() {
 
   dl.append('dt').text('Most Frequent Time of Day');
   dl.append('dd').text(`${timeOfDay[0]} (${timeOfDay[1]} lines)`);
-
-
 }
 
 function updateTooltipContent(commit) {
@@ -121,23 +104,19 @@ function updateTooltipContent(commit) {
   });
   time.textContent = commit.time;
   author.textContent = commit.author;
-  lines.textContent = commit.line;
+  lines.textContent = commit.totalLines;
 }
 
 function updateTooltipVisibility(isVisible) {
   const tooltip = document.getElementById('commit-tooltip');
   tooltip.hidden = !isVisible;
 }
+
 function updateTooltipPosition(event) {
   const tooltip = document.getElementById('commit-tooltip');
   tooltip.style.left = `${event.clientX + 10}px`;
   tooltip.style.top = `${event.clientY + 10}px`;
 }
-
-
-
-
-
 
 function createScatterPlot() {
   const width = 1000;
@@ -157,27 +136,39 @@ function createScatterPlot() {
 
   const yScale = d3.scaleLinear().domain([0, 24]).range([height, 0]);
 
+  // Calculate the range of edited lines across all commits
+  const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
+
+  // Create a linear scale for the radius
+  const rScale = d3.scaleLinear().domain([minLines, maxLines]).range([2, 30]);
+
+  // Sort the commits by the number of edited lines in descending order
+  const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
+
   const dots = svg.append('g').attr('class', 'dots');
   const tooltip = d3.select('#commit-tooltip').style('opacity', 1);
   dots
     .selectAll('circle')
-    .data(commits)
+    .data(sortedCommits)
     .join('circle')
     .attr('cx', (d) => xScale(d.datetime))
     .attr('cy', (d) => yScale(d.hourFrac))
-    .attr('r', 5)
+    .attr('r', (d) => rScale(d.totalLines))
     .attr('fill', 'steelblue')
-    .on('mouseenter', (event, commit) => {
+    .style('fill-opacity', 0.7) // Add transparency for overlapping dots
+    .on('mouseenter', function (event, commit) {
       updateTooltipContent(commit);
       updateTooltipVisibility(true);
       updateTooltipPosition(event);
+      d3.select(event.currentTarget).style('fill-opacity', 1); // Full opacity on hover
     })
     .on('mousemove', (event) => {
       updateTooltipPosition(event);
     })
-    .on('mouseleave', () => {
+    .on('mouseleave', function () {
       updateTooltipContent({});
       updateTooltipVisibility(false);
+      d3.select(this).style('fill-opacity', 0.7); // Restore transparency
     });
 
   const margin = { top: 10, right: 10, bottom: 30, left: 20 };
@@ -189,7 +180,7 @@ function createScatterPlot() {
     width: width - margin.left - margin.right,
     height: height - margin.top - margin.bottom,
   };
-  
+
   // Update scales with new ranges
   xScale.range([usableArea.left, usableArea.right]);
   yScale.range([usableArea.bottom, usableArea.top]);
@@ -220,20 +211,12 @@ function createScatterPlot() {
     .append('g')
     .attr('transform', `translate(${usableArea.left}, 0)`)
     .call(yAxis);
-
-
-  
 }
-
-
-
-
 
 document.addEventListener('DOMContentLoaded', async () => {
   await loadData();
   processCommits();
   createScatterPlot();
-  // updateTooltipContent();
   console.log(commits);
 });
 
