@@ -279,3 +279,27 @@ circle:hover {
 circle.selected {
   fill: #ff6b6b;
 }
+
+.project-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.projects {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border-radius: 4px;
+  background: var(--surface-2);
+}
+
+.projects a {
+  text-decoration: none;
+  color: var(--link-color);
+}
+
+.projects a:hover {
+  text-decoration: underline;
+}

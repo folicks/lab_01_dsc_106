@@ -156,22 +156,37 @@ function renderProjects(projects, containerElement, headingLevel = 'h2') {
   containerElement.innerHTML = ''; // Clear existing content
 
   projects.forEach(project => {
-      const article = document.createElement('article');
-      const projectElement = document.createElement('div');
-      projectElement.classList.add('project');
+    const projectElement = document.createElement('article');
+    projectElement.classList.add('projects');
 
-      const yearElement = document.createElement('div');
-      yearElement.classList.add('project-year');
-      yearElement.textContent = `Year: ${project.year}`;
+    // Add image if present
+    if (project.image) {
+      const img = document.createElement('img');
+      img.src = project.image;
+      img.alt = project.title;
+      img.classList.add('project-image');
+      projectElement.appendChild(img);
+    }
 
-      article.innerHTML = `
-          <${headingLevel}>${project.title}</${headingLevel}>
-          <img src="${project.image}" alt="${project.title}">
-          <p>${project.description}</p>
-      `;
+    const heading = document.createElement(headingLevel);
+    
+    // Check if the project has a URL
+    if (project.url) {
+      const link = document.createElement('a');
+      link.href = project.url;
+      link.textContent = project.title;
+      link.target = '_blank'; // Open in new tab
+      heading.appendChild(link);
+    } else {
+      heading.textContent = project.title;
+    }
 
-      article.appendChild(yearElement);
-      containerElement.appendChild(article);
+    const description = document.createElement('p');
+    description.textContent = project.description;
+
+    projectElement.appendChild(heading);
+    projectElement.appendChild(description);
+    containerElement.appendChild(projectElement);
   });
 }
 

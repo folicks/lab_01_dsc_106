@@ -82,6 +82,14 @@
     "year": "2024",
     "image": "https://dsc106.com/labs/lab02/images/empty.svg",
     "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam dolor quos, quod assumenda explicabo odio, nobis ipsa laudantium quas eum veritatis ullam sint porro minima modi molestias doloribus cumque odit."
+  },
+  {
+    "title": "BIKES",
+    "year": "2024",
+    "image": "../images/favicon.png",
+    "description": "Traffic in Red Sox",
+    "url": "https://folicks.github.io/BIKES/"
   }
+  
 
 ]
