@@ -15,6 +15,18 @@
 
 
         <h2>Commits by time of day</h2>
+        <div>
+            <label for="time-filter-container" style="margin-left: auto;">
+                commits by:
+                <input type="range" id="time-filter" min="0" max="100" value="100">
+                <!-- what does value mean in this line -->
+                <time id="selected-time"></time>
+                <!-- < !-- place time of the commit with commitMaxTime --> 
+                <!-- <em id="selectedTime">(any time)</em> -->
+            
+            </label>
+        </div>
+
         <div id="chart"></div>
             
         <dl id="commit-tooltip" class="info tooltip">

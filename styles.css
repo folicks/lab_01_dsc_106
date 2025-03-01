@@ -303,3 +303,17 @@ circle.selected {
 .projects a:hover {
   text-decoration: underline;
 }
+#time-filter-container {
+ display: flex;
+ flex-direction: row; /* Ensure horizontal layout */
+ align-items: baseline; /* Align label and slider baseline */
+ justify-content: space-between; /* Push time to the right */
+}
+#time-filter-container label {
+ flex-grow: 1; /* Allow label to take available space */
+ display: flex; /* Enable flexbox for label content */
+ align-items: baseline; /* Align text and slider within label */
+}
+#time-filter-container time {
+ margin-left: auto; /* Push time to the far right */
+}
