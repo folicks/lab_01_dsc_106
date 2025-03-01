@@ -273,6 +273,19 @@ circle {
   transform-origin: center;
   transform-box: fill-box;
 }
+/* For newly added circles, simulate the transition effect */
+.new-circle {
+  animation: growCircle 200ms forwards;
+}
+
+@keyframes growCircle {
+  0% {
+    r: 0;
+  }
+  100% {
+    r: var(--circle-radius);
+  }
+}
 circle:hover {
   transform: scale(1.5);
 }
