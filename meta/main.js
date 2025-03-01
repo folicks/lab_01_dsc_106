@@ -7,6 +7,7 @@ let selectedCommits = [];
 let commitProgress = 100;
 let commitMaxTime;
 let filteredCommits = []; // Add filteredCommits as a global variable
+let filteredData = []; // Add filteredData to store filtered lines of code
 
 async function loadData() {
     data = await d3.csv('./loc.csv', (row) => ({
@@ -17,11 +18,12 @@ async function loadData() {
         date: new Date(row.date + 'T00:00' + row.timezone),
         datetime: new Date(row.datetime),
     }));
-    displayStats();
     processCommits();
     updateTimeScale();
     updateCommitMaxTime();
     updateFilteredCommits(); // Initialize filteredCommits
+    updateFilteredData(); // Initialize filteredData
+    displayStats(filteredData); // Pass filteredData initially
     createScatterPlot(filteredCommits); // Use filteredCommits initially
     setupTimeSlider();
 }
@@ -45,7 +47,9 @@ function processCommits() {
                 totalLines: lines.reduce((sum, d) => sum + d.line, 0),
                 lines: lines.map(line => ({
                     type: line.type,
-                    line: line.line
+                    line: line.line,
+                    file: line.file, // Make sure file is included
+                    datetime: line.datetime // Include datetime for filtering
                 }))
             };
         });
@@ -66,6 +70,10 @@ function updateFilteredCommits() {
     filteredCommits = commits.filter(commit => commit.datetime <= commitMaxTime);
 }
 
+// New function to filter the original data based on commitMaxTime
+function updateFilteredData() {
+    filteredData = data.filter(d => d.datetime <= commitMaxTime);
+}
 
 function getTimeOfDay(date) {
     const hour = date.getHours();
@@ -86,58 +94,83 @@ function getDayOfWeek(date) {
     return days[dayIndex];
 }
 
-function displayStats() {
+function displayStats(dataSet) {
+    // Clear previous stats
+    d3.select('#stats').html('');
+    
     const dl = d3.select('#stats').append('dl').attr('class', 'stats');
 
     dl.append('dt').html('Total <abbr title="Lines of code">LOC</abbr>');
-    dl.append('dd').text(data.length);
+    dl.append('dd').text(dataSet.length);
 
+    // Get unique commits in the filtered data
+    const uniqueCommits = new Set(dataSet.map(d => d.commit)).size;
     dl.append('dt').text('Total commits');
-    dl.append('dd').text(commits.length);
+    dl.append('dd').text(uniqueCommits);
 
-    const numberOfFiles = d3.group(data, d => d.file).size;
+    const numberOfFiles = d3.group(dataSet, d => d.file).size;
     dl.append('dt').text('Number of files');
     dl.append('dd').text(numberOfFiles);
 
     const fileLengths = d3.rollups(
-        data,
+        dataSet,
         (v) => d3.max(v, (v) => v.line),
         (d) => d.file
     );
-    const maxFileLength = d3.max(fileLengths, (d) => d[1]);
-    dl.append('dt').text('Maximum file length');
-    dl.append('dd').text(`${maxFileLength} lines`);
+    
+    if (fileLengths.length > 0) {
+        const maxFileLength = d3.max(fileLengths, (d) => d[1]);
+        dl.append('dt').text('Maximum file length');
+        dl.append('dd').text(`${maxFileLength} lines`);
 
-    const averageFileLength = d3.mean(fileLengths, (d) => d[1]);
-    dl.append('dt').text('Average file length');
-    dl.append('dd').text(`${averageFileLength.toFixed(0)} lines`);
+        const averageFileLength = d3.mean(fileLengths, (d) => d[1]);
+        dl.append('dt').text('Average file length');
+        dl.append('dd').text(`${averageFileLength.toFixed(0)} lines`);
+    } else {
+        dl.append('dt').text('Maximum file length');
+        dl.append('dd').text('0 lines');
+        
+        dl.append('dt').text('Average file length');
+        dl.append('dd').text('0 lines');
+    }
 
     const workByDayOfWeek = d3.rollups(
-        data,
+        dataSet,
         (v) => v.length,
         (d) => getDayOfWeek(d.datetime)
     );
-    const maxDayOfWeek = d3.greatest(workByDayOfWeek, (d) => d[1]);
-    dl.append('dt').text('Day with most work');
-    dl.append('dd').text(`${maxDayOfWeek[0]} (${maxDayOfWeek[1]} lines)`);
+    
+    if (workByDayOfWeek.length > 0) {
+        const maxDayOfWeek = d3.greatest(workByDayOfWeek, (d) => d[1]);
+        dl.append('dt').text('Day with most work');
+        dl.append('dd').text(`${maxDayOfWeek[0]} (${maxDayOfWeek[1]} lines)`);
+    } else {
+        dl.append('dt').text('Day with most work');
+        dl.append('dd').text('None');
+    }
 
-    const maxDepth = d3.max(data, (d) => d.depth);
+    const maxDepth = dataSet.length > 0 ? d3.max(dataSet, (d) => d.depth) : 0;
     dl.append('dt').text('Max Depth');
     dl.append('dd').text(maxDepth);
 
     const timeOfDayCounts = d3.rollup(
-        data,
+        dataSet,
         (v) => v.length,
         (d) => getTimeOfDay(d.datetime)
     );
 
-    const mostFrequentTimeOfDay = d3.max(Array.from(timeOfDayCounts), (d) => d[1]);
-    const timeOfDay = Array.from(timeOfDayCounts).find(
-        (d) => d[1] === mostFrequentTimeOfDay
-    );
+    if (timeOfDayCounts.size > 0) {
+        const mostFrequentTimeOfDay = d3.max(Array.from(timeOfDayCounts), (d) => d[1]);
+        const timeOfDay = Array.from(timeOfDayCounts).find(
+            (d) => d[1] === mostFrequentTimeOfDay
+        );
 
-    dl.append('dt').text('Most Frequent Time of Day');
-    dl.append('dd').text(`${timeOfDay[0]} (${timeOfDay[1]} lines)`);
+        dl.append('dt').text('Most Frequent Time of Day');
+        dl.append('dd').text(`${timeOfDay[0]} (${timeOfDay[1]} lines)`);
+    } else {
+        dl.append('dt').text('Most Frequent Time of Day');
+        dl.append('dd').text('None');
+    }
 }
 
 function updateTooltipContent(commit) {
@@ -266,6 +299,9 @@ function createScatterPlot(plotData) {
         .append('g')
         .attr('transform', `translate(${usableArea.left}, 0)`)
         .call(yAxis);
+        
+    // Reapply brush after creating new scatter plot
+    brushSelector();
 }
 
 let brushSelection = null;
@@ -341,14 +377,21 @@ function setupTimeSlider() {
         commitProgress = +this.value;
         updateCommitMaxTime();
         updateFilteredCommits(); // Update filteredCommits
+        updateFilteredData(); // Update filteredData
+        displayStats(filteredData); // Update stats with filtered data
         createScatterPlot(filteredCommits); // Re-render with filteredCommits
         updateDisplayTime(commitMaxTime);
+        
+        // Reset selection when filter changes
+        selectedCommits = [];
+        updateSelectionCount();
+        updateLanguageBreakdown();
     });
     updateDisplayTime(commitMaxTime);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
     await loadData();
-    brushSelector();
+    // brushSelector is now called inside createScatterPlot
     console.log(commits);
 });
