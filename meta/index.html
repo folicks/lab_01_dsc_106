@@ -13,7 +13,21 @@
         <h1>Analyzing my own code commits</h1>
         <div id="stats"></div>
 
+        <!-- last lab make the file paths show up dynamically -->
 
+        <dl class="files">
+            <!-- we want the following structure for each file-->
+            <div>
+              <dt>
+                <code>{file.name}</code>
+              </dt>
+              <dd>{file.lines.length} lines</dd>
+            </div>
+            <div>
+              ...
+            </div>
+        </dl>
+        
         <h2>Commits by time of day</h2>
         <div>
             <label for="time-filter-container" style="margin-left: auto;">
@@ -26,6 +40,8 @@
             
             </label>
         </div>
+
+        
 
         <div id="chart"></div>
             
