@@ -22,37 +22,66 @@ let commitMaxTime;
 
 
 function updateFileDetails(filteredData) {
-    // First group by file and commit to get per-commit changes
-    const fileCommitChanges = d3.rollups(
-        filteredData,
-        v => d3.sum(v, d => Math.abs(d.length)), // Use length field for lines changed
-        d => d.file, // Group by file first
-        d => d.commit // Then by commit
-    );
+    // First group by file to get the mapping of files to their types
+    const filePathGroups = d3.group(filteredData, d => d.file);
+    
+    // Create a map of file paths and their types/lines
+    const fileStats = Array.from(filePathGroups, ([filePath, lines]) => {
+        // Get the type from the file extension
+        const type = filePath.split('.').pop();
+        return {
+            name: filePath,  // Full file path
+            type: type,      // File type (js, css, html)
+            lineChanges: lines.length
+        };
+    });
 
-    // Convert to file summaries with accumulated changes
-    const files = fileCommitChanges.map(([filePath, commits]) => ({
-        filePath,
-        totalLines: d3.sum(commits, commit => commit[1]), // Sum up lines from all commits
-        firstCommit: commits[0][0], // First commit ID
-        firstDate: d3.min(filteredData.filter(d => d.file === filePath), d => d.datetime)
-    }));
+    // Group by type for totals
+    const filesByType = d3.group(fileStats, d => d.type);
+    const typeStats = Array.from(filesByType, ([type, files]) => {
+        return {
+            type: type,
+            files: files,
+            totalLines: d3.sum(files, f => f.lineChanges)
+        };
+    });
 
-    // Clear and update file list
+    // Calculate grand total
+    const totalLines = d3.sum(fileStats, d => d.lineChanges);
+
+    // Sort types by total lines descending
+    typeStats.sort((a, b) => b.totalLines - a.totalLines);
+
+    // Update the DOM
     const fileContainer = d3.select('.files');
     fileContainer.selectAll('div').remove();
 
-    const fileDivs = fileContainer.selectAll('div')
-        .data(files)
+    // Create a group for each type
+    const typeGroups = fileContainer.selectAll('div.type-group')
+        .data(typeStats)
         .enter()
-        .append('div');
+        .append('div')
+        .attr('class', 'type-group');
+
+    // Add type header with total
+    typeGroups.append('dt')
+        .append('code')
+        .text(d => `${d.type} (${d.totalLines} lines, ${(d.totalLines / totalLines * 100).toFixed(1)}% of total)`);
+
+    // Add individual files under each type
+    const fileDivs = typeGroups.selectAll('div.file')
+        .data(d => d.files)
+        .enter()
+        .append('div')
+        .attr('class', 'file')
+        .style('margin-left', '20px');  // Indent files under their type
 
     fileDivs.append('dt')
         .append('code')
-        .text(d => d.filePath);
+        .text(d => d.name);
 
     fileDivs.append('dd')
-        .text(d => `${d.totalLines} lines (first changed in ${d3.timeFormat('%Y-%m-%d')(d.firstDate)})`);
+        .text(d => `${d.lineChanges} lines`);
 }
 
 
