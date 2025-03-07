@@ -1,119 +1,116 @@
-
-
-
 body {
-    /* Set line height to 1.5 times the font size
-         and use the OS’s UI font as the website font
-       */
-    font: 100%/1.5 system-ui;
-    /* max-width */
-    margin-inline: max(1em, (100% - 100ch) / 2);
-    padding:50;
+  /* Set line height to 1.5 times the font size
+       and use the OS's UI font as the website font
+     */
+  font: 100%/1.5 system-ui;
+  /* max-width */
+  margin-inline: max(1em, (100% - 100ch) / 2);
+  padding:50;
 }
 body {
-  /* Set line height to 1.5 times the font size and use the OS's UI font */
-  font: 100%/1.5 system-ui;
-  /* Center content with a max-width and add padding */
-  margin-inline: max(1em, (100% - 100ch) / 2);
-  padding: 50px;
+/* Set line height to 1.5 times the font size and use the OS's UI font */
+font: 100%/1.5 system-ui;
+/* Center content with a max-width and add padding */
+margin-inline: max(1em, (100% - 100ch) / 2);
+padding: 50px;
 }
 
 nav {
-  /* Ensure navigation renders inline elements correctly */
-  display: flex;
-  justify-content: center;
-  gap: 1rem; /* Space between links */
-  --border-color: oklch(50% 10% 200 / 40%);
+/* Ensure navigation renders inline elements correctly */
+display: flex;
+justify-content: center;
+gap: 1rem; /* Space between links */
+--border-color: oklch(50% 10% 200 / 40%);
 }
 
 label.color-scheme {
-  /* Position the switcher in the top-right corner */
-  position: absolute;
-  top: 1rem; /* Adjust to your preference */
-  right: 1rem; /* Adjust to your preference */
-  font-size: 0.8rem; /* Make the font slightly smaller */
-  font-family: inherit; /* Use the same font as the body */
-  z-index: 100; /* Ensure it stays above other elements */
+/* Position the switcher in the top-right corner */
+position: absolute;
+top: 1rem; /* Adjust to your preference */
+right: 1rem; /* Adjust to your preference */
+font-size: 0.8rem; /* Make the font slightly smaller */
+font-family: inherit; /* Use the same font as the body */
+z-index: 100; /* Ensure it stays above other elements */
 }
 
 label.color-scheme:hover {
-  /* Optional hover effect for the switcher */
-  color: #007BFF; /* Add a color change for better interaction */
-  cursor: pointer;
+/* Optional hover effect for the switcher */
+color: #007BFF; /* Add a color change for better interaction */
+cursor: pointer;
 }
 
 a {
-  /* Style links in the navigation */
-  text-decoration: none;
-  color: black;
-  font-size: 1rem;
-  transition: color 0.3s ease; /* Smooth transition for hover effect */
+/* Style links in the navigation */
+text-decoration: none;
+color: black;
+font-size: 1rem;
+transition: color 0.3s ease; /* Smooth transition for hover effect */
 }
 
 a:hover {
-  /* Change color on hover */
-  color: #007BFF;
+/* Change color on hover */
+color: #007BFF;
 }
 
 a.current {
-  /* Highlight the current page link */
-  font-weight: bold;
-  color: #0056b3;
-  text-decoration: underline;
+/* Highlight the current page link */
+font-weight: bold;
+color: #0056b3;
+text-decoration: underline;
 }
 
 
 [data-theme="dark"] {
-  background-color: #121212;
-  color: white;
+background-color: #121212;
+color: white;
 }
 
 [data-theme="dark"] a {
-  color: white;
+color: white;
 }
 
 [data-theme="dark"] a.current {
-  color: #ffa500; /* Highlight color for the current page */
+color: #ffa500; /* Highlight color for the current page */
 }
 
 [data-theme="dark"] a:hover {
-  color: #FFD700; /* Brighter hover color in dark mode */
+color: #FFD700; /* Brighter hover color in dark mode */
 }
 
 
 /* lab 04 */
 .profile-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  max-width: 600px;
-  margin: auto;
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 10px;
+max-width: 600px;
+margin: auto;
 }
 
 .profile-grid dt {
-  font-weight: bold;
-  grid-row: 1;
+font-weight: bold;
+grid-row: 1;
 }
 
 .profile-grid dd {
-  grid-row: 2;
-  margin: 0;
+grid-row: 2;
+margin: 0;
 }
 
 .project-year {
-  font-family: Baskerville, serif;
-  font-variant-numeric: oldstyle-nums;
-  font-size: 14px;
-  color: gray;
-  margin-top: 5px;
+font-family: Baskerville, serif;
+font-variant-numeric: oldstyle-nums;
+font-size: 14px;
+color: gray;
+margin-top: 5px;
 }
 
 svg {
-  max-width: 20em;
-  margin-block: 2em;
+max-width: 20em;
+margin-block: 2em;
 
-  /* Do not clip shapes outside the viewBox */
-  overflow: visible;
+/* Do not clip shapes outside the viewBox */
+overflow: visible;
 }
 
 
@@ -123,223 +120,303 @@ svg {
 
 
 .legend {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
-  gap: 15px;
-  padding: 15px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+gap: 15px;
+padding: 15px;
+background: white;
+border-radius: 8px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 14px;
 }
 
 .swatch {
-  display: inline-flex;
-  width: 20px;
-  height: 20px;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  background-color: var(--color);
+display: inline-flex;
+width: 20px;
+height: 20px;
+aspect-ratio: 1/1;
+border-radius: 50%;
+background-color: var(--color);
 }
 
 .container {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
+display: flex;
+align-items: center;
+gap: 40px;
+padding: 20px;
+max-width: 800px;
+margin: 0 auto;
 }
 
 .chart-container {
-  flex: 0 0 200px;
+flex: 0 0 200px;
 }
 
 .legend-container {
-  flex: 1;
-  min-width: 300px;
+flex: 1;
+min-width: 300px;
 } 
 
 
 /* Pie chart interaction styles */
 svg {
-  /* Handle hover states for pie segments */
-  &:has(path:hover) {
-    path:not(:hover) {
-      opacity: 0.5;
-    }
+/* Handle hover states for pie segments */
+&:has(path:hover) {
+  path:not(:hover) {
+    opacity: 0.5;
   }
+}
 }
 
 /* Transition for smooth animations */
 path {
-  transition: 300ms;
-  cursor: pointer;
+transition: 300ms;
+cursor: pointer;
 }
 
 /* Selected state styling */
 .selected {
-  --color: oklch(60% 45% 0) !important;
+--color: oklch(60% 45% 0) !important;
 }
 
 .selected:is(path) {
-  fill: var(--color);
+fill: var(--color);
 
-  
+
 }
 
 /* Legend styling */
 .legend li {
-  cursor: pointer;
-  transition: 300ms;
+cursor: pointer;
+transition: 300ms;
 }
 
 .legend .selected {
-  font-weight: bold;
+font-weight: bold;
 }
 
 
 #stats dl.stats {
-  /* Style the dl element with class 'stats' inside the #stats element */
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 20px;
+/* Style the dl element with class 'stats' inside the #stats element */
+display: flex;
+flex-direction: column;
+border: 1px solid #ccc;
+padding: 10px;
+margin-bottom: 20px;
 }
 
 #stats dt {
-  /* Style the dt elements inside the #stats element */
-  font-weight: bold;
-  margin-bottom: 5px;
+/* Style the dt elements inside the #stats element */
+font-weight: bold;
+margin-bottom: 5px;
 }
 
 #stats dd {
-  /* Style the dd elements inside the #stats element */
-  margin-left: 0; /* Remove default margin */
-  margin-bottom: 10px;
+/* Style the dd elements inside the #stats element */
+margin-left: 0; /* Remove default margin */
+margin-bottom: 10px;
 }
 
 .gridlines line {
-  stroke: lightgray;
-  stroke-opacity: 0.7;
-  stroke-dasharray: 2, 2;
+stroke: lightgray;
+stroke-opacity: 0.7;
+stroke-dasharray: 2, 2;
 }
 dl.info {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 4px;
-  margin: 0;
-  padding: 4px; /* Reduced padding */
-  border: 1px solid #ddd;
-  transition-duration: 500ms;
-  transition-property: opacity, visibility;
+display: grid;
+grid-template-columns: auto 1fr;
+gap: 4px;
+margin: 0;
+padding: 4px; /* Reduced padding */
+border: 1px solid #ddd;
+transition-duration: 500ms;
+transition-property: opacity, visibility;
 }
 dl.info[hidden]:not(:hover, :focus-within) {
-  opacity: 0;
-  visibility: hidden;
+opacity: 0;
+visibility: hidden;
 }
 .info dt {
-  font-weight: bold;
-  font-size: 0.8em; /* Smaller font size */
+font-weight: bold;
+font-size: 0.8em; /* Smaller font size */
 }
 .info dd {
-  margin: 0;
-  font-size: 0.8em; /* Smaller font size */
+margin: 0;
+font-size: 0.8em; /* Smaller font size */
 }
 .tooltip {
-  position: fixed;
-  top: 1em;
-  left: 1em;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px; /* Reduced padding */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5px);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-  width: 150px; /* Fixed width */
+position: fixed;
+top: 1em;
+left: 1em;
+background: rgba(255, 255, 255, 0.8);
+border: 1px solid #ccc;
+border-radius: 4px;
+padding: 8px; /* Reduced padding */
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(5px);
+pointer-events: none;
+opacity: 0;
+transition: opacity 0.3s;
+width: 150px; /* Fixed width */
 }
 circle {
-  transition: 200ms;
-  transform-origin: center;
-  transform-box: fill-box;
-  @starting-style{
-    r: 0;
-  }
+transition: 200ms;
+transform-origin: center;
+transform-box: fill-box;
+@starting-style{
+  r: 0;
+}
 }
 
 
 /* For newly added circles, simulate the transition effect */
 .new-circle {
-  animation: growCircle 200ms forwards;
+animation: growCircle 200ms forwards;
 }
 /* 
 @keyframes growCircle {
-  0% {
-    r: 0;
-  }
-  100% {
-    r: var(--circle-radius);
-  }
+0% {
+  r: 0;
+}
+100% {
+  r: var(--circle-radius);
+}
 } */
 
 
 circle:hover {
-  transform: scale(1.5);
+transform: scale(1.5);
 }
 circle.selected {
-  fill: #ff6b6b;
+fill: #ff6b6b;
 }
 
 .project-image {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 1rem;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+max-width: 100%;
+height: auto;
+margin-bottom: 1rem;
+border-radius: 4px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .projects {
-  margin-bottom: 2rem;
-  padding: 1rem;
-  border-radius: 4px;
-  background: var(--surface-2);
+margin-bottom: 2rem;
+padding: 1rem;
+border-radius: 4px;
+background: var(--surface-2);
 }
 
 .projects a {
-  text-decoration: none;
-  color: var(--link-color);
+text-decoration: none;
+color: var(--link-color);
 }
 
 .projects a:hover {
-  text-decoration: underline;
+text-decoration: underline;
 }
 #time-filter-container {
- display: flex;
- flex-direction: row; /* Ensure horizontal layout */
- align-items: baseline; /* Align label and slider baseline */
- justify-content: space-between; /* Push time to the right */
+display: flex;
+flex-direction: row; /* Ensure horizontal layout */
+align-items: baseline; /* Align label and slider baseline */
+justify-content: space-between; /* Push time to the right */
 }
 #time-filter-container label {
- flex-grow: 1; /* Allow label to take available space */
- display: flex; /* Enable flexbox for label content */
- align-items: baseline; /* Align text and slider within label */
+flex-grow: 1; /* Allow label to take available space */
+display: flex; /* Enable flexbox for label content */
+align-items: baseline; /* Align text and slider within label */
 }
 #time-filter-container time {
- margin-left: auto; /* Push time to the far right */
+margin-left: auto; /* Push time to the far right */
 }
 
 .files > div {
+grid-column: 1 / -1;
+display: grid;
+grid-template-columns: subgrid;
+}
+
+.line {
+display: flex;
+width: 0.5em;
+aspect-ratio: 1;
+border-radius: 50%;
+}
+
+dd {
+grid-column: 2;
+display: flex;
+flex-wrap: wrap;
+align-items: start;
+align-content: start;
+gap: 0.15em;
+padding-top: 0.6em;
+margin-left: 0;
+}
+
+:global(body) {
+  max-width: min(120ch, 80vw);
+}
+
+#scrollytelling {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: subgrid;
+}
+
+#scroll-container {
+  grid-column: 1;
+  position: relative;
+  width: 95%;
+  height: 350px;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  margin-bottom: 50px;
+}
+
+#chart {
+  grid-column: 2;
+}
+
+#spacer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: none;
+  pointer-events: none;
+}
+
+#items-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.item {
+  height: 80px;  /* Increased from 30px to accommodate narrative text */
+  padding: 10px;
+  box-sizing: border-box;
+  border-bottom: 2px solid #eee;
+}
+
+.item p {
+  margin: 0;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.item a {
+  color: #007BFF;
+  text-decoration: none;
+}
+
+.item a:hover {
+  text-decoration: underline;
 }
