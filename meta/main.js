@@ -5,7 +5,7 @@ let commits = [];
 let xScale, yScale, rScale;
 let selectedCommits = [];
 
-// Scrollytelling variables
+// Scrollytelling variables for commits
 let NUM_ITEMS = 100; // Will be set to commits.length
 let ITEM_HEIGHT = 150; // Updated to match our CSS height for items
 let VISIBLE_COUNT = 10;
@@ -13,6 +13,15 @@ let totalHeight;
 const scrollContainer = d3.select('#scroll-container');
 const spacer = d3.select('#spacer');
 const itemsContainer = d3.select('#items-container');
+
+// Scrollytelling variables for files
+let FILES_ITEM_HEIGHT = 150;
+let filesItemCount = 0;
+let filesTotalHeight;
+const filesScrollContainer = d3.select('#files-scroll-container');
+const filesSpacer = d3.select('#files-spacer');
+const filesItemsContainer = d3.select('#files-items-container');
+let filesArray = [];
 
 // let lines = filteredCommits.flatMap((d) => d.lines);
 // let files = [];
@@ -201,22 +210,34 @@ function renderItems(startIndex) {
 }
 
 function displayCommitFiles(filteredCommits) {
+    // Gather all lines from the filtered commits
     const lines = filteredCommits.flatMap(d => d.lines);
+    
+    // Create color scale for file types
     const fileTypeColors = d3.scaleOrdinal(d3.schemeTableau10);
-    const files = d3.groups(lines, d => d.file).map(([name, lines]) => {
+    
+    // Group by file and convert to an array of file objects
+    filesArray = d3.groups(lines, d => d.file).map(([name, lines]) => {
         return { name, lines };
     });
-    const sortedFiles = d3.sort(files, d => -d.lines.length);
     
+    // Sort files by line count in descending order
+    filesArray = d3.sort(filesArray, d => -d.lines.length);
+    
+    // Clear previous file display in the regular section
     d3.select('.files').selectAll('div').remove();
+    
+    // Create file containers
     const filesContainer = d3.select('.files').selectAll('div')
-        .data(sortedFiles)
+        .data(filesArray)
         .enter()
         .append('div');
     
+    // Add file names and line counts
     filesContainer.append('dt')
-        .html(d => `<code>${d.name}</code><small>${d.lines.length} lines</small>`);
+        .html(d => `<code>${d.name}</code>`);
     
+    // Add line unit visualizations
     filesContainer.append('dd')
         .selectAll('div')
         .data(d => d.lines)
@@ -224,6 +245,161 @@ function displayCommitFiles(filteredCommits) {
         .append('div')
         .attr('class', 'line')
         .style('background', d => fileTypeColors(d.type));
+    
+    // Update the files chart with unit visualization
+    updateFilesChart(filesArray);
+    
+    // Initialize files scrollytelling if not already done
+    setupFilesScrollytelling();
+}
+
+// Function to update the files chart with unit visualization
+function updateFilesChart(files) {
+    // Clear the previous visualization
+    d3.select('#files-chart').selectAll('*').remove();
+    
+    // File type color scale
+    const fileTypeColors = d3.scaleOrdinal(d3.schemeTableau10);
+    
+    // Create a container for each file
+    const fileContainers = d3.select('#files-chart').selectAll('.file-unit-container')
+        .data(files)
+        .enter()
+        .append('div')
+        .attr('class', 'file-unit-container');
+    
+    // Add file name
+    fileContainers.append('div')
+        .attr('class', 'file-name')
+        .text(d => d.name);
+    
+    // Add a small box for each line in the file
+    fileContainers.each(function(d) {
+        d3.select(this).selectAll('.line')
+            .data(d.lines)
+            .enter()
+            .append('div')
+            .attr('class', 'line')
+            .style('background', d => fileTypeColors(d.type || d.file.split('.').pop()))
+            .attr('title', d => `${d.file}: Line ${d.line}`);
+    });
+}
+
+// Function to render file items for scrollytelling
+function renderFileItems(startIndex) {
+    // Clear previous items
+    filesItemsContainer.selectAll('div').remove();
+    
+    // Calculate the end index for slicing
+    const endIndex = Math.min(startIndex + VISIBLE_COUNT, filesArray.length);
+    const visibleFiles = filesArray.slice(startIndex, endIndex);
+    
+    // Update the files chart with only visible files
+    updateFilesChart(visibleFiles);
+    
+    // Ensure container has proper height to fit all files
+    const containerHeight = filesArray.length * FILES_ITEM_HEIGHT;
+    filesItemsContainer.style('height', `${containerHeight}px`);
+    
+    // Re-bind the file data to the container and represent each using a div
+    const items = filesItemsContainer.selectAll('div')
+        .data(filesArray)
+        .enter()
+        .append('div')
+        .attr('class', 'file-item')
+        .style('position', 'absolute')
+        .style('top', (_, idx) => `${idx * FILES_ITEM_HEIGHT}px`)
+        .style('width', '95%')
+        .classed('visible', (d, i) => i >= startIndex && i < endIndex);
+    
+    // Add narrative text to each item
+    items.each(function(d, i) {
+        const item = d3.select(this);
+        
+        // Generate a story about this file
+        const fileName = d.name.split('/').pop();
+        const fileExt = fileName.split('.').pop();
+        const lineCount = d.lines.length;
+        
+        // Create narrative text based on file properties
+        let narrative;
+        if (i === 0) {
+            narrative = `<p>Let's examine <code>${fileName}</code>, the most edited file in the project. 
+                       With ${lineCount} lines changed, this ${fileExt} file is clearly a central part of the codebase. 
+                       Each small square in the visualization represents one line of code that was changed.</p>`;
+        } else if (i === 1) {
+            narrative = `<p>Next we have <code>${fileName}</code>, the second most edited file with ${lineCount} lines changed. 
+                       As a ${fileExt} file, it plays an important role in the project's structure.</p>`;
+        } else {
+            narrative = `<p>The file <code>${fileName}</code> has ${lineCount} lines of changes. 
+                       This ${fileExt} file contributes to the overall functionality of the project.</p>`;
+        }
+        
+        // Add the narrative
+        item.append('div')
+            .attr('class', 'file-narrative')
+            .html(narrative);
+                   
+        // Make item clickable to highlight corresponding file in chart
+        item.on('mouseover', function() {
+            // Highlight this file in the chart
+            d3.select('#files-chart').selectAll('.file-unit-container')
+                .filter((f, j) => f.name === d.name)
+                .style('box-shadow', '0 0 10px rgba(66, 133, 244, 0.8)');
+                
+            // Make this item more visible
+            d3.select(this).style('z-index', 100);
+        })
+        .on('mouseout', function() {
+            // Remove highlighting
+            d3.select('#files-chart').selectAll('.file-unit-container')
+                .style('box-shadow', '0 2px 4px rgba(0,0,0,0.05)');
+                
+            // Reset z-index
+            d3.select(this).style('z-index', null);
+        });
+    });
+    
+    // Log visible files for debugging
+    console.log(`Displaying files ${startIndex} to ${endIndex-1} of ${filesArray.length}`);
+}
+
+// Setup scrollytelling for files
+function setupFilesScrollytelling() {
+    // Set file item count
+    filesItemCount = filesArray.length;
+    filesTotalHeight = filesItemCount * FILES_ITEM_HEIGHT;
+    
+    // Set the height of spacer element to allow scrolling
+    filesSpacer.style('height', `${filesTotalHeight}px`);
+    
+    // Set up scroll event listener
+    filesScrollContainer.on('scroll', function() {
+        const scrollTop = this.scrollTop;
+        const scrollHeight = this.scrollHeight;
+        const containerHeight = this.offsetHeight;
+        
+        // Calculate the visible range of files
+        const startIndex = Math.floor(scrollTop / FILES_ITEM_HEIGHT);
+        const visibleCount = Math.ceil(containerHeight / FILES_ITEM_HEIGHT);
+        const endIndex = Math.min(startIndex + visibleCount, filesArray.length);
+        
+        // Get the currently visible files
+        const visibleFiles = filesArray.slice(startIndex, endIndex);
+        
+        // Update the item visibility classes
+        d3.selectAll('.file-item')
+            .classed('visible', (d, i) => i >= startIndex && i < endIndex);
+        
+        // Update files chart to show only visible files
+        updateFilesChart(visibleFiles);
+        
+        // Log scroll info for debugging
+        console.log(`Files scroll position: ${scrollTop}, Visible files: ${startIndex}-${endIndex-1} of ${filesArray.length}`);
+    });
+    
+    // Render initial file items
+    renderFileItems(0);
 }
 
 async function loadData() {
@@ -247,20 +423,23 @@ async function loadData() {
         // Display initial stats for all data
         displayStats();
         
-        // Update global variables for scrollytelling
+        // Update global variables for commit scrollytelling
         NUM_ITEMS = commits.length;
         totalHeight = NUM_ITEMS * ITEM_HEIGHT;
         
         // Set the height of spacer element to allow scrolling
         spacer.style('height', `${totalHeight}px`);
         
-        // Initial render of items
+        // Initial render of commit items
         renderItems(0);
         
-        // Initialize scrollytelling
+        // Display file data and initialize file scrollytelling
+        displayCommitFiles(commits);
+        
+        // Initialize commit scrollytelling
         setupScrollytelling();
         
-        console.log(`Loaded ${commits.length} commits`);
+        console.log(`Loaded ${commits.length} commits and ${filesArray.length} files`);
     } catch (e) {
         console.error('Error loading or processing data:', e);
     }
