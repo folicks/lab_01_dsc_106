@@ -29,17 +29,6 @@
         </dl>
         
         <h2>Commits by time of day</h2>
-        <div>
-            <label for="time-filter-container" style="margin-left: auto;">
-                commits by:
-                <input type="range" id="time-filter" min="0" max="100" value="100">
-                <!-- what does value mean in this line -->
-                <time id="selected-time"></time>
-                <!-- < !-- place time of the commit with commitMaxTime --> 
-                <!-- <em id="selectedTime">(any time)</em> -->
-            
-            </label>
-        </div>
 
         <div id="scrollytelling">
             <div id="scroll-container">
@@ -49,7 +38,8 @@
             <div id="chart"></div>
         </div>
             
-        <dl id="commit-tooltip" class="info tooltip">
+        <!-- Commit tooltip with expanded information -->
+        <dl id="commit-tooltip" class="tooltip" hidden style="opacity: 0; visibility: hidden; display: none;">
             <dt>Commit</dt>
             <dd>
                 <a href="" id="commit-link" target="_blank"></a>
@@ -66,10 +56,9 @@
         
             <dt>Lines Edited</dt>
             <dd id="commit-lines"></dd>
-
-            
         </dl>
 
+        <!-- Selection statistics -->
         <p id="selection-count">No commits selected</p>
         <dl id="language-breakdown" class="stats"></dl>
   
